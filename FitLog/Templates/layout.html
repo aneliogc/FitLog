@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITULO}} – FitLog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .navbar-fitlog { background-color: #1f2937; }
+    .navbar-fitlog .nav-link.active { color: #fff; border-bottom: 2px solid #0d6efd; }
+    .conteudo { background: #fff; border-radius: .75rem; box-shadow: 0 1px 3px rgba(0, 0, 0, .08); }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100 bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg navbar-fitlog sticky-top" data-bs-theme="dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d6efd" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11" />
+        </svg>
+        FitLog
+      </a>
+      {{MENU}}
+    </div>
+  </nav>
+
+  <main class="container flex-grow-1 py-4">
+    <div class="conteudo p-4">
+      {{CONTEUDO}}
+    </div>
+  </main>
+
+  <footer class="py-3 text-center text-body-secondary small">
+    FitLog · Banco de Dados I – CEFET-MG · 2026
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

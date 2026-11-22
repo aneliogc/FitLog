@@ -1,0 +1,12 @@
+<h1>Novo grupo muscular</h1>
+
+{{ALERTA}}
+
+<form method="post" action="/grupos/salvar" style="max-width: 400px">
+  <div class="mb-3">
+    <label class="form-label" for="nome">Nome</label>
+    <input class="form-control" id="nome" name="nome" value="{{NOME}}" required maxlength="50">
+  </div>
+  <button class="btn btn-primary">Salvar</button>
+  <a class="btn btn-secondary" href="/grupos">Cancelar</a>
+</form>

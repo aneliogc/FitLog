@@ -37,6 +37,11 @@ while (true)
                 case "/grupos":       GrupoHandler.Listar(ctx); break;
                 case "/grupos/form":  GrupoHandler.Formulario(ctx); break;
 
+                // Exercícios
+                case "/exercicios":       ExercicioHandler.Listar(ctx); break;
+                case "/exercicios/form":  ExercicioHandler.Formulario(ctx); break;
+                case "/exercicios/grupos": ExercicioHandler.Grupos(ctx); break;
+
                 default: NaoEncontrada(ctx); break;
             }
         }
@@ -52,6 +57,13 @@ while (true)
                 // Grupos musculares
                 case "/grupos/salvar":   GrupoHandler.Salvar(ctx); break;
                 case "/grupos/excluir":  GrupoHandler.Excluir(ctx); break;
+
+                // Exercícios
+                case "/exercicios/salvar":   ExercicioHandler.Salvar(ctx); break;
+                case "/exercicios/excluir":  ExercicioHandler.Excluir(ctx); break;
+                case "/exercicios/grupos/incluir":    ExercicioHandler.IncluirGrupo(ctx); break;
+                case "/exercicios/grupos/principal":  ExercicioHandler.TornarPrincipal(ctx); break;
+                case "/exercicios/grupos/remover":    ExercicioHandler.RemoverGrupo(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

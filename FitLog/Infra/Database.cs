@@ -47,9 +47,32 @@ public static class Database
     public static int Executar(string sql, params (string Nome, object? Valor)[] parametros)
     {
         using var conn = Abrir();
+        return Executar(conn, sql, parametros);
+    }
+
+    // Executa usando uma conexão já aberta (usada dentro de Transacao)
+    public static int Executar(OracleConnection conn, string sql, params (string Nome, object? Valor)[] parametros)
+    {
         using var cmd = new OracleCommand(sql, conn) { BindByName = true };
         foreach (var (nome, valor) in parametros)
             cmd.Parameters.Add(nome, valor ?? DBNull.Value);
         return cmd.ExecuteNonQuery();
+    }
+
+    // Executa vários comandos como uma unidade: ou todos são gravados (COMMIT), ou nenhum (ROLLBACK).
+    public static void Transacao(Action<OracleConnection> comandos)
+    {
+        using var conn = Abrir();
+        using var transacao = conn.BeginTransaction();
+        try
+        {
+            comandos(conn);
+            transacao.Commit();
+        }
+        catch
+        {
+            transacao.Rollback();
+            throw;
+        }
     }
 }

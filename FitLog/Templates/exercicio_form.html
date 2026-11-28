@@ -1,0 +1,29 @@
+<h1>{{TITULO_FORM}}</h1>
+
+{{ALERTA}}
+
+<form method="post" action="/exercicios/salvar" style="max-width: 400px">
+  <input type="hidden" name="id" value="{{ID}}">
+  <div class="mb-3">
+    <label class="form-label" for="nome">Nome</label>
+    <input class="form-control" id="nome" name="nome" value="{{NOME}}" required maxlength="100" autofocus>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="tipo">Tipo</label>
+    <select class="form-select" id="tipo" name="tipo" required>
+      <option value="CARGA" {{SEL_CARGA}}>Carga</option>
+      <option value="PESO_CORPORAL" {{SEL_PESO_CORPORAL}}>Peso corporal</option>
+    </select>
+    <div class="form-text">Nos exercícios de peso corporal, a carga das séries é gravada como zero.</div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="id_grupo">Grupo muscular principal</label>
+    <select class="form-select" id="id_grupo" name="id_grupo" required {{GRUPO_DESABILITADO}}>
+      <option value="">Selecione...</option>
+      {{OPCOES_GRUPO}}
+    </select>
+    <div class="form-text">{{AJUDA_GRUPO}}</div>
+  </div>
+  <button class="btn btn-primary">Salvar</button>
+  <a class="btn btn-secondary" href="/exercicios">Cancelar</a>
+</form>

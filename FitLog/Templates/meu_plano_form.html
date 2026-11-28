@@ -1,0 +1,14 @@
+<h1>{{TITULO_FORM}}</h1>
+
+{{ALERTA}}
+
+<form method="post" action="/meus-planos/salvar" style="max-width: 400px">
+  <input type="hidden" name="id_plano" value="{{ID}}">
+  <div class="mb-3">
+    <label class="form-label" for="nome">Nome</label>
+    <input class="form-control" id="nome" name="nome" value="{{NOME}}" required maxlength="100" autofocus>
+    <div class="form-text">{{AJUDA}}</div>
+  </div>
+  <button class="btn btn-primary">Salvar</button>
+  <a class="btn btn-secondary" href="/meus-planos">Cancelar</a>
+</form>

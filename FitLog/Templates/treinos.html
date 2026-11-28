@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Treinos realizados</h1>
+  <a class="btn btn-primary" href="/treinos/form">Registrar treino</a>
+</div>
+
+{{ALERTA}}
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr><th>Data</th><th>Horário</th><th>Duração</th><th>Treino</th><th>Séries</th><th></th></tr>
+    </thead>
+    <tbody>
+      {{LINHAS}}
+    </tbody>
+  </table>
+</div>

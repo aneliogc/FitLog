@@ -1,0 +1,49 @@
+<div class="mb-3">
+  <a href="/treinos" class="text-decoration-none">&larr; Treinos realizados</a>
+  <h1 class="mt-1 mb-0">{{TREINO}}</h1>
+  <div class="text-body-secondary">{{QUANDO}}</div>
+</div>
+
+{{ALERTA}}
+
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr><th>Exercício</th><th>Série</th><th>Carga</th><th>Repetições</th><th>Descanso</th><th></th></tr>
+    </thead>
+    <tbody>
+      {{LINHAS}}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="h5 mt-4">{{TITULO_FORM}}</h2>
+<form method="post" action="/treinos/series/salvar" style="max-width: 600px">
+  <input type="hidden" name="id_sessao" value="{{ID_SESSAO}}">
+  <input type="hidden" name="numero" value="{{NUMERO}}">
+  {{ID_EXERCICIO_FIXO}}
+  <div class="mb-3">
+    <label class="form-label" for="id_exercicio">Exercício</label>
+    <select class="form-select" id="id_exercicio" name="id_exercicio" required {{EXERCICIO_DESABILITADO}}>
+      <option value="">Selecione...</option>
+      {{OPCOES_EXERCICIO}}
+    </select>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <label class="form-label" for="carga">Carga (kg)</label>
+      <input class="form-control" id="carga" name="carga" inputmode="decimal" value="{{CARGA}}" required>
+    </div>
+    <div class="col">
+      <label class="form-label" for="repeticoes">Repetições</label>
+      <input class="form-control" id="repeticoes" name="repeticoes" type="number" value="{{REPETICOES}}" required>
+    </div>
+    <div class="col">
+      <label class="form-label" for="descanso">Descanso (s)</label>
+      <input class="form-control" id="descanso" name="descanso" type="number" value="{{DESCANSO}}">
+    </div>
+  </div>
+  <div class="form-text mb-3">O número da série é dado automaticamente. Em exercícios de peso corporal, a carga é gravada como zero.</div>
+  <button class="btn btn-primary">Salvar</button>
+  {{CANCELAR}}
+</form>

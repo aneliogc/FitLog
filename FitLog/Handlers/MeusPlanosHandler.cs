@@ -10,49 +10,55 @@ namespace FitLog.Handlers;
 // Todas as consultas e alterações filtram pelo usuário logado (regra 15).
 public static class MeusPlanosHandler
 {
-    // GET /meus-planos            (página)
-    // GET /meus-planos?plano=     (formulário de plano personalizado em modo "renomear")
-    // GET /meus-planos?ficha=     (formulário de ficha avulsa em modo "renomear")
+    // GET /meus-planos
     public static void Exibir(HttpListenerContext ctx)
     {
         var usuario = Autenticacao.ExigirLogin(ctx);
         if (usuario == null) return;
 
-        var idPlano = Http.Query(ctx, "plano");
-        var nomePlano = "";
-        if (idPlano != "")
+        Http.Html(ctx, Pagina(ctx, usuario, ""));
+    }
+
+    // GET /meus-planos/form e /meus-planos/form?id=   (novo plano personalizado ou renomear)
+    public static void FormularioPersonalizado(HttpListenerContext ctx)
+    {
+        var usuario = Autenticacao.ExigirLogin(ctx);
+        if (usuario == null) return;
+
+        var id = Http.Query(ctx, "id");
+        if (id == "")
         {
-            var planos = Database.Consultar("""
-                SELECT p.nome FROM plano p
-                JOIN usuario_plano up ON up.id_plano = p.id_plano
-                WHERE p.id_plano = :id AND p.tipo = 'PERSONALIZADO' AND up.id_usuario = :id_usuario
-                """, ("id", int.Parse(idPlano)), ("id_usuario", usuario.Id));
-            if (planos.Count == 0) idPlano = "";
-            else nomePlano = planos[0]["NOME"]!.ToString()!;
+            Http.Html(ctx, PaginaFormulario(ctx, "", "", ""));
+            return;
         }
 
-        var idFicha = Http.Query(ctx, "ficha");
-        var nomeFicha = "";
-        if (idFicha != "")
+        var planos = Database.Consultar("""
+            SELECT p.nome FROM plano p
+            JOIN usuario_plano up ON up.id_plano = p.id_plano
+            WHERE p.id_plano = :id AND p.tipo = 'PERSONALIZADO' AND up.id_usuario = :id_usuario
+            """, ("id", int.Parse(id)), ("id_usuario", usuario.Id));
+
+        if (planos.Count == 0)
         {
-            var fichas = Database.Consultar(
-                "SELECT nome FROM treino WHERE id_treino = :id AND tipo_treino = 'AVULSO' AND id_usuario = :id_usuario",
-                ("id", int.Parse(idFicha)), ("id_usuario", usuario.Id));
-            if (fichas.Count == 0) idFicha = "";
-            else nomeFicha = fichas[0]["NOME"]!.ToString()!;
+            Http.Redirect(ctx, "/meus-planos");
+            return;
         }
 
-        Http.Html(ctx, Pagina(ctx, usuario, "", idPlano, nomePlano, idFicha, nomeFicha));
+        Http.Html(ctx, PaginaFormulario(ctx, id, planos[0]["NOME"]!.ToString()!, ""));
     }
 
     // POST /meus-planos/salvar   (cria ou renomeia um plano personalizado)
     public static void SalvarPersonalizado(HttpListenerContext ctx)
     {
-        Alterar(ctx, (usuario, form) =>
-        {
-            var id = form["id_plano"];
-            var nome = form["nome"].Trim();
+        var usuario = Autenticacao.ExigirLogin(ctx);
+        if (usuario == null) return;
 
+        var form = Http.Form(ctx);
+        var id = form["id_plano"];
+        var nome = form["nome"].Trim();
+
+        try
+        {
             if (id != "")
             {
                 Database.Executar("""
@@ -61,7 +67,8 @@ public static class MeusPlanosHandler
                       AND EXISTS (SELECT 1 FROM usuario_plano up WHERE up.id_plano = plano.id_plano AND up.id_usuario = :id_usuario)
                     """,
                     ("nome", nome), ("id", int.Parse(id)), ("id_usuario", usuario.Id));
-                return "/meus-planos";
+                Http.Redirect(ctx, "/meus-planos");
+                return;
             }
 
             // Plano e associação com o dono na mesma transação: um plano personalizado nunca fica sem dono
@@ -77,9 +84,27 @@ public static class MeusPlanosHandler
                     ("id_usuario", usuario.Id), ("id_plano", novoId));
             });
 
-            // Plano novo ainda não tem fichas: vai direto para a tela de fichas dele
-            return $"/planos/fichas?id={novoId}";
-        });
+            // Plano novo ainda não tem treinos: vai direto para a tela de treinos dele
+            Http.Redirect(ctx, $"/planos/fichas?id={novoId}");
+        }
+        catch (Exception ex)
+        {
+            Http.Html(ctx, PaginaFormulario(ctx, id, nome, Erros.Traduzir(ex)));
+        }
+    }
+
+    private static string PaginaFormulario(HttpListenerContext ctx, string id, string nome, string erro)
+    {
+        var titulo = id == "" ? "Novo plano personalizado" : "Renomear plano";
+
+        return Template.Pagina(ctx, "meu_plano_form.html", new()
+        {
+            ["TITULO_FORM"] = titulo,
+            ["ALERTA"] = Template.Alerta(erro),
+            ["ID"] = WebUtility.HtmlEncode(id),
+            ["NOME"] = WebUtility.HtmlEncode(nome),
+            ["AJUDA"] = id == "" ? "Depois de salvar, você vai para a tela de treinos do plano." : ""
+        }, titulo);
     }
 
     // POST /meus-planos/ativar
@@ -155,28 +180,80 @@ public static class MeusPlanosHandler
         });
     }
 
-    // POST /meus-planos/fichas/salvar   (cria ou renomeia uma ficha avulsa)
+    // GET /meus-planos/fichas/form e /meus-planos/fichas/form?id=   (novo treino avulso ou renomear)
+    public static void FormularioFichaAvulsa(HttpListenerContext ctx)
+    {
+        var usuario = Autenticacao.ExigirLogin(ctx);
+        if (usuario == null) return;
+
+        var id = Http.Query(ctx, "id");
+        if (id == "")
+        {
+            Http.Html(ctx, PaginaFormularioAvulso(ctx, "", "", ""));
+            return;
+        }
+
+        var fichas = Database.Consultar(
+            "SELECT nome FROM treino WHERE id_treino = :id AND tipo_treino = 'AVULSO' AND id_usuario = :id_usuario",
+            ("id", int.Parse(id)), ("id_usuario", usuario.Id));
+
+        if (fichas.Count == 0)
+        {
+            Http.Redirect(ctx, "/meus-planos");
+            return;
+        }
+
+        Http.Html(ctx, PaginaFormularioAvulso(ctx, id, fichas[0]["NOME"]!.ToString()!, ""));
+    }
+
+    // POST /meus-planos/fichas/salvar   (cria ou renomeia um treino avulso)
     public static void SalvarFichaAvulsa(HttpListenerContext ctx)
     {
-        Alterar(ctx, (usuario, form) =>
-        {
-            var id = form["id_treino"];
-            var nome = form["nome"].Trim();
+        var usuario = Autenticacao.ExigirLogin(ctx);
+        if (usuario == null) return;
 
+        var form = Http.Form(ctx);
+        var id = form["id_treino"];
+        var nome = form["nome"].Trim();
+
+        try
+        {
             if (id == "")
             {
-                Database.Executar(
-                    "INSERT INTO treino (nome, tipo_treino, id_usuario) VALUES (:nome, 'AVULSO', :id_usuario)",
+                using var conn = Database.Abrir();
+                var novoId = Database.InserirComId(conn,
+                    "INSERT INTO treino (nome, tipo_treino, id_usuario) VALUES (:nome, 'AVULSO', :id_usuario)", "id_treino",
                     ("nome", nome), ("id_usuario", usuario.Id));
+
+                // Treino novo ainda não tem exercícios: vai direto para a tela de exercícios dele
+                Http.Redirect(ctx, $"/fichas/exercicios?id={novoId}");
             }
             else
             {
                 Database.Executar(
                     "UPDATE treino SET nome = :nome WHERE id_treino = :id AND tipo_treino = 'AVULSO' AND id_usuario = :id_usuario",
                     ("nome", nome), ("id", int.Parse(id)), ("id_usuario", usuario.Id));
+                Http.Redirect(ctx, "/meus-planos");
             }
-            return "/meus-planos";
-        });
+        }
+        catch (Exception ex)
+        {
+            Http.Html(ctx, PaginaFormularioAvulso(ctx, id, nome, Erros.Traduzir(ex)));
+        }
+    }
+
+    private static string PaginaFormularioAvulso(HttpListenerContext ctx, string id, string nome, string erro)
+    {
+        var titulo = id == "" ? "Novo treino avulso" : "Renomear treino";
+
+        return Template.Pagina(ctx, "treino_avulso_form.html", new()
+        {
+            ["TITULO_FORM"] = titulo,
+            ["ALERTA"] = Template.Alerta(erro),
+            ["ID"] = WebUtility.HtmlEncode(id),
+            ["NOME"] = WebUtility.HtmlEncode(nome),
+            ["AJUDA"] = id == "" ? "Depois de salvar, você vai para a tela de exercícios do treino." : ""
+        }, titulo);
     }
 
     // POST /meus-planos/fichas/excluir
@@ -205,27 +282,18 @@ public static class MeusPlanosHandler
         }
         catch (Exception ex)
         {
-            Http.Html(ctx, Pagina(ctx, usuario, Erros.Traduzir(ex), "", "", "", ""));
+            Http.Html(ctx, Pagina(ctx, usuario, Erros.Traduzir(ex)));
         }
     }
 
-    private static string Pagina(HttpListenerContext ctx, UsuarioLogado usuario, string erro,
-                                 string idPlano, string nomePlano, string idFicha, string nomeFicha)
+    private static string Pagina(HttpListenerContext ctx, UsuarioLogado usuario, string erro)
     {
         return Template.Pagina(ctx, "meus_planos.html", new()
         {
             ["ALERTA"] = Template.Alerta(erro),
             ["CARTOES_PERSONALIZADOS"] = CartoesPlanos(usuario, "PERSONALIZADO"),
             ["CARTOES_PREDEFINIDOS"] = CartoesPlanos(usuario, "PREDEFINIDO"),
-            ["ID_PLANO_FORM"] = WebUtility.HtmlEncode(idPlano),
-            ["NOME_PLANO_FORM"] = WebUtility.HtmlEncode(nomePlano),
-            ["TITULO_PLANO_FORM"] = idPlano == "" ? "Criar plano personalizado" : "Renomear plano",
-            ["CANCELAR_PLANO"] = idPlano == "" ? "" : """<a class="btn btn-secondary" href="/meus-planos">Cancelar</a>""",
-            ["LINHAS_AVULSAS"] = LinhasFichasAvulsas(usuario),
-            ["ID_FICHA_FORM"] = WebUtility.HtmlEncode(idFicha),
-            ["NOME_FICHA_FORM"] = WebUtility.HtmlEncode(nomeFicha),
-            ["TITULO_FICHA_FORM"] = idFicha == "" ? "Novo treino avulso" : "Renomear treino",
-            ["CANCELAR_FICHA"] = idFicha == "" ? "" : """<a class="btn btn-secondary" href="/meus-planos">Cancelar</a>"""
+            ["LINHAS_AVULSAS"] = LinhasFichasAvulsas(usuario)
         }, "Meus planos");
     }
 
@@ -285,7 +353,7 @@ public static class MeusPlanosHandler
             if (personalizado)
             {
                 botoes.Append($"""<a class="btn btn-sm btn-outline-primary" href="/planos/fichas?id={id}">Editar treinos</a> """);
-                botoes.Append($"""<a class="btn btn-sm btn-outline-primary" href="/meus-planos?plano={id}">Renomear</a> """);
+                botoes.Append($"""<a class="btn btn-sm btn-outline-primary" href="/meus-planos/form?id={id}">Renomear</a> """);
                 botoes.Append(Botao("/meus-planos/excluir", id, "Excluir", "btn-outline-danger",
                     "Excluir este plano e todos os treinos dele?"));
             }
@@ -365,7 +433,7 @@ public static class MeusPlanosHandler
                   <td>{f["EXERCICIOS"]}</td>
                   <td class="text-end text-nowrap">
                     <a class="btn btn-sm btn-outline-secondary" href="/fichas/exercicios?id={id}">Exercícios</a>
-                    <a class="btn btn-sm btn-outline-primary" href="/meus-planos?ficha={id}">Renomear</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/meus-planos/fichas/form?id={id}">Renomear</a>
                     <form method="post" action="/meus-planos/fichas/excluir" class="d-inline" onsubmit="return confirm('Excluir este treino avulso?')">
                       <input type="hidden" name="id_treino" value="{id}">
                       <button class="btn btn-sm btn-outline-danger">Excluir</button>

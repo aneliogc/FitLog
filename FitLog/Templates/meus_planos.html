@@ -6,17 +6,12 @@
   Ative o plano que você está seguindo agora. Ao registrar um treino, aparecem os treinos do seu plano ativo e os seus treinos avulsos.
 </p>
 
-<h2 class="h4 mt-4">Meus planos personalizados</h2>
+<div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+  <h2 class="h4 mb-0">Meus planos personalizados</h2>
+  <a class="btn btn-primary btn-sm" href="/meus-planos/form">Novo plano</a>
+</div>
 
 {{CARTOES_PERSONALIZADOS}}
-
-<h3 class="h6">{{TITULO_PLANO_FORM}}</h3>
-<form method="post" action="/meus-planos/salvar" class="d-flex gap-2" style="max-width: 500px">
-  <input type="hidden" name="id_plano" value="{{ID_PLANO_FORM}}">
-  <input class="form-control" name="nome" value="{{NOME_PLANO_FORM}}" placeholder="Nome do plano" required maxlength="100">
-  <button class="btn btn-primary">Salvar</button>
-  {{CANCELAR_PLANO}}
-</form>
 
 <h2 class="h4 mt-5">Planos predefinidos</h2>
 
@@ -24,7 +19,10 @@
 
 <hr class="my-4">
 
-<h2 class="h4">Treinos avulsos</h2>
+<div class="d-flex justify-content-between align-items-center mb-1">
+  <h2 class="h4 mb-0">Treinos avulsos</h2>
+  <a class="btn btn-primary btn-sm" href="/meus-planos/fichas/form">Novo treino</a>
+</div>
 <p class="text-body-secondary small">Treinos que não fazem parte de nenhum plano.</p>
 
 <table class="table table-striped align-middle">
@@ -35,11 +33,3 @@
     {{LINHAS_AVULSAS}}
   </tbody>
 </table>
-
-<h3 class="h6">{{TITULO_FICHA_FORM}}</h3>
-<form method="post" action="/meus-planos/fichas/salvar" class="d-flex gap-2" style="max-width: 500px">
-  <input type="hidden" name="id_treino" value="{{ID_FICHA_FORM}}">
-  <input class="form-control" name="nome" value="{{NOME_FICHA_FORM}}" placeholder="Ex.: Abdômen rápido" required maxlength="100">
-  <button class="btn btn-primary">Salvar</button>
-  {{CANCELAR_FICHA}}
-</form>

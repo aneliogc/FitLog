@@ -1,0 +1,31 @@
+<h1>{{TITULO_FORM}}</h1>
+
+{{ALERTA}}
+
+<form method="post" action="/treinos/salvar" style="max-width: 400px">
+  <input type="hidden" name="id" value="{{ID}}">
+  <div class="mb-3">
+    <label class="form-label" for="data">Data</label>
+    <input class="form-control" id="data" name="data" type="date" value="{{DATA}}" required>
+  </div>
+  <div class="row mb-3">
+    <div class="col">
+      <label class="form-label" for="hora_inicio">Início</label>
+      <input class="form-control" id="hora_inicio" name="hora_inicio" type="time" value="{{HORA_INICIO}}" required>
+    </div>
+    <div class="col">
+      <label class="form-label" for="hora_fim">Fim</label>
+      <input class="form-control" id="hora_fim" name="hora_fim" type="time" value="{{HORA_FIM}}" required>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="id_treino">Treino</label>
+    <select class="form-select" id="id_treino" name="id_treino">
+      <option value="">Livre (sem treino definido)</option>
+      {{OPCOES_TREINO}}
+    </select>
+    <div class="form-text">Aparecem os treinos do plano ativo e os seus treinos avulsos.</div>
+  </div>
+  <button class="btn btn-primary">{{BOTAO}}</button>
+  <a class="btn btn-secondary" href="/treinos">Cancelar</a>
+</form>

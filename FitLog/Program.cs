@@ -57,6 +57,13 @@ while (true)
 
                 // Meus planos
                 case "/meus-planos":         MeusPlanosHandler.Exibir(ctx); break;
+                case "/meus-planos/form":    MeusPlanosHandler.FormularioPersonalizado(ctx); break;
+                case "/meus-planos/fichas/form": MeusPlanosHandler.FormularioFichaAvulsa(ctx); break;
+
+                // Treinos realizados e séries
+                case "/treinos":             SessaoHandler.Listar(ctx); break;
+                case "/treinos/form":        SessaoHandler.Formulario(ctx); break;
+                case "/treinos/series":      SerieHandler.Listar(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }
@@ -107,6 +114,12 @@ while (true)
                 case "/meus-planos/excluir":         MeusPlanosHandler.ExcluirPersonalizado(ctx); break;
                 case "/meus-planos/fichas/salvar":   MeusPlanosHandler.SalvarFichaAvulsa(ctx); break;
                 case "/meus-planos/fichas/excluir":  MeusPlanosHandler.ExcluirFichaAvulsa(ctx); break;
+
+                // Treinos realizados e séries
+                case "/treinos/salvar":              SessaoHandler.Salvar(ctx); break;
+                case "/treinos/excluir":             SessaoHandler.Excluir(ctx); break;
+                case "/treinos/series/salvar":       SerieHandler.Salvar(ctx); break;
+                case "/treinos/series/excluir":      SerieHandler.Excluir(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

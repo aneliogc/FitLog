@@ -40,9 +40,9 @@ public static class Erros
         if (msg.Contains("UX_EXGRUPO_UM_PRINCIPAL")) return "Este exercício já tem um grupo muscular principal.";
         if (msg.Contains("PK_USUARIO_PLANO")) return "Você já segue este plano.";
         if (msg.Contains("UX_USUPLANO_UM_ATIVO")) return "Você já tem um plano ativo.";
-        if (msg.Contains("UK_TREINO_PLANO_ORDEM")) return "Já existe uma ficha nesta posição do plano.";
-        if (msg.Contains("PK_TREINO_EXERCICIO")) return "Este exercício já está na ficha.";
-        if (msg.Contains("UK_TREINOEX_ORDEM")) return "Já existe um exercício nesta posição da ficha.";
+        if (msg.Contains("UK_TREINO_PLANO_ORDEM")) return "Já existe um treino nesta posição do plano.";
+        if (msg.Contains("PK_TREINO_EXERCICIO")) return "Este exercício já está no treino.";
+        if (msg.Contains("UK_TREINOEX_ORDEM")) return "Já existe um exercício nesta posição do treino.";
 
         return "Já existe um registro com esses dados.";
     }

@@ -59,6 +59,20 @@ public static class Database
         return cmd.ExecuteNonQuery();
     }
 
+    // INSERT que devolve o id gerado pelo IDENTITY, com "RETURNING coluna INTO :novo_id".
+    public static int InserirComId(OracleConnection conn, string sql, string colunaId, params (string Nome, object? Valor)[] parametros)
+    {
+        using var cmd = new OracleCommand(sql + " RETURNING " + colunaId + " INTO :novo_id", conn) { BindByName = true };
+        foreach (var (nome, valor) in parametros)
+            cmd.Parameters.Add(nome, valor ?? DBNull.Value);
+
+        var novoId = new OracleParameter("novo_id", OracleDbType.Int32, System.Data.ParameterDirection.Output);
+        cmd.Parameters.Add(novoId);
+
+        cmd.ExecuteNonQuery();
+        return ((Oracle.ManagedDataAccess.Types.OracleDecimal)novoId.Value).ToInt32();
+    }
+
     // Executa vários comandos como uma unidade: ou todos são gravados (COMMIT), ou nenhum (ROLLBACK).
     public static void Transacao(Action<OracleConnection> comandos)
     {

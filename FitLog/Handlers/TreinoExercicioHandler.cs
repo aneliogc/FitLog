@@ -107,7 +107,7 @@ public static class TreinoExercicioHandler
 
         var voltar = ficha["TIPO_TREINO"]!.ToString() == "AVULSO"
             ? """<a href="/meus-planos" class="text-decoration-none">&larr; Meus planos</a>"""
-            : $"""<a href="/planos/fichas?id={ficha["ID_PLANO"]}" class="text-decoration-none">&larr; Fichas do plano</a>""";
+            : $"""<a href="/planos/fichas?id={ficha["ID_PLANO"]}" class="text-decoration-none">&larr; Treinos do plano</a>""";
 
         var exercicios = Database.Consultar("""
             SELECT e.id_exercicio, e.nome, e.tipo
@@ -138,7 +138,7 @@ public static class TreinoExercicioHandler
                     <button class="btn btn-sm btn-outline-secondary" name="direcao" value="cima" title="Subir" {cima}>&uarr;</button>
                     <button class="btn btn-sm btn-outline-secondary" name="direcao" value="baixo" title="Descer" {baixo}>&darr;</button>
                   </form>
-                  <form method="post" action="/fichas/exercicios/remover" class="d-inline" onsubmit="return confirm('Remover este exercício da ficha?')">
+                  <form method="post" action="/fichas/exercicios/remover" class="d-inline" onsubmit="return confirm('Remover este exercício do treino?')">
                     <input type="hidden" name="id_treino" value="{idTreino}">
                     <input type="hidden" name="id_exercicio" value="{id}">
                     <button class="btn btn-sm btn-outline-danger">Remover</button>
@@ -149,7 +149,7 @@ public static class TreinoExercicioHandler
         }
 
         if (exercicios.Count == 0)
-            linhas.Append("<tr><td colspan=\"4\" class=\"text-body-secondary\">Nenhum exercício nesta ficha.</td></tr>");
+            linhas.Append("<tr><td colspan=\"4\" class=\"text-body-secondary\">Nenhum exercício neste treino.</td></tr>");
 
         // Só os exercícios que ainda não estão na ficha
         var opcoes = new StringBuilder();

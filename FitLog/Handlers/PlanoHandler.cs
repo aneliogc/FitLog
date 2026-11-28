@@ -95,7 +95,7 @@ public static class PlanoHandler
         var planos = Database.Consultar("""
             SELECT p.id_plano, p.nome,
                    (SELECT COUNT(*) FROM treino t        WHERE t.id_plano  = p.id_plano) AS fichas,
-                   (SELECT COUNT(*) FROM usuario_plano up WHERE up.id_plano = p.id_plano) AS seguidores
+                   (SELECT COUNT(*) FROM usuario_plano up WHERE up.id_plano = p.id_plano AND up.ativo = 1) AS seguidores
             FROM plano p
             WHERE p.tipo = 'PREDEFINIDO'
             ORDER BY p.nome
@@ -111,9 +111,9 @@ public static class PlanoHandler
             linhas.Append($"<td>{p["SEGUIDORES"]}</td>");
             linhas.Append($"""
                 <td class="text-end">
-                  <a class="btn btn-sm btn-outline-secondary" href="/planos/fichas?id={id}">Fichas</a>
+                  <a class="btn btn-sm btn-outline-secondary" href="/planos/fichas?id={id}">Treinos</a>
                   <a class="btn btn-sm btn-outline-primary" href="/planos/form?id={id}">Editar</a>
-                  <form method="post" action="/planos/excluir" class="d-inline" onsubmit="return confirm('Excluir o plano e todas as fichas dele? Quem segue o plano deixará de segui-lo.')">
+                  <form method="post" action="/planos/excluir" class="d-inline" onsubmit="return confirm('Excluir o plano e todos os treinos dele? Quem estiver com ele ativo ficará sem plano ativo.')">
                     <input type="hidden" name="id" value="{id}">
                     <button class="btn btn-sm btn-outline-danger">Excluir</button>
                   </form>

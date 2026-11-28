@@ -191,7 +191,7 @@ public static class TreinoHandler
                   </form>
                   <a class="btn btn-sm btn-outline-secondary" href="/fichas/exercicios?id={id}">Exercícios</a>
                   <a class="btn btn-sm btn-outline-primary" href="/planos/fichas?id={idPlano}&ficha={id}">Renomear</a>
-                  <form method="post" action="/planos/fichas/excluir" class="d-inline" onsubmit="return confirm('Excluir esta ficha?')">
+                  <form method="post" action="/planos/fichas/excluir" class="d-inline" onsubmit="return confirm('Excluir este treino?')">
                     <input type="hidden" name="id_plano" value="{idPlano}">
                     <input type="hidden" name="id_treino" value="{id}">
                     <button class="btn btn-sm btn-outline-danger">Excluir</button>
@@ -202,7 +202,7 @@ public static class TreinoHandler
         }
 
         if (fichas.Count == 0)
-            linhas.Append("<tr><td colspan=\"4\" class=\"text-body-secondary\">Nenhuma ficha neste plano.</td></tr>");
+            linhas.Append("<tr><td colspan=\"4\" class=\"text-body-secondary\">Nenhum treino neste plano.</td></tr>");
 
         var editando = idTreino != "";
         return Template.Pagina(ctx, "plano_fichas.html", new()
@@ -214,8 +214,8 @@ public static class TreinoHandler
             ["ID_PLANO"] = idPlano.ToString(),
             ["ID_TREINO"] = WebUtility.HtmlEncode(idTreino),
             ["NOME"] = WebUtility.HtmlEncode(nome),
-            ["TITULO_FORM"] = editando ? "Renomear ficha" : "Nova ficha",
+            ["TITULO_FORM"] = editando ? "Renomear treino" : "Novo treino",
             ["CANCELAR"] = editando ? $"""<a class="btn btn-secondary" href="/planos/fichas?id={idPlano}">Cancelar</a>""" : ""
-        }, "Fichas de " + plano["NOME"]);
+        }, "Treinos de " + plano["NOME"]);
     }
 }

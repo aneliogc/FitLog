@@ -131,7 +131,7 @@ public static class UsuarioHandler
                         <input type="hidden" name="perfil" value="{novoPerfil}">
                         <button class="btn btn-sm btn-outline-primary">{textoBotao}</button>
                       </form>
-                      <form method="post" action="/usuarios/excluir" class="d-inline" onsubmit="return confirm('Excluir este usuário? Os planos personalizados, as fichas avulsas e os treinos dele também serão apagados.')">
+                      <form method="post" action="/usuarios/excluir" class="d-inline" onsubmit="return confirm('Excluir este usuário? Os planos personalizados, os treinos avulsos e os treinos registrados dele também serão apagados.')">
                         <input type="hidden" name="id" value="{id}">
                         <button class="btn btn-sm btn-outline-danger">Excluir</button>
                       </form>

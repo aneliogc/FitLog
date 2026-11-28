@@ -55,6 +55,9 @@ while (true)
                 case "/minha-conta":         MinhaContaHandler.Exibir(ctx); break;
                 case "/minha-conta/senha":   MinhaContaHandler.FormularioSenha(ctx); break;
 
+                // Meus planos
+                case "/meus-planos":         MeusPlanosHandler.Exibir(ctx); break;
+
                 default: NaoEncontrada(ctx); break;
             }
         }
@@ -96,6 +99,14 @@ while (true)
                 case "/minha-conta/salvar":          MinhaContaHandler.SalvarDados(ctx); break;
                 case "/minha-conta/senha":           MinhaContaHandler.AlterarSenha(ctx); break;
                 case "/minha-conta/excluir":         MinhaContaHandler.Excluir(ctx); break;
+
+                // Meus planos
+                case "/meus-planos/salvar":          MeusPlanosHandler.SalvarPersonalizado(ctx); break;
+                case "/meus-planos/ativar":          MeusPlanosHandler.Ativar(ctx); break;
+                case "/meus-planos/desativar":       MeusPlanosHandler.Desativar(ctx); break;
+                case "/meus-planos/excluir":         MeusPlanosHandler.ExcluirPersonalizado(ctx); break;
+                case "/meus-planos/fichas/salvar":   MeusPlanosHandler.SalvarFichaAvulsa(ctx); break;
+                case "/meus-planos/fichas/excluir":  MeusPlanosHandler.ExcluirFichaAvulsa(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

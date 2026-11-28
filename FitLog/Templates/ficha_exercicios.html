@@ -1,0 +1,26 @@
+<div class="mb-3">
+  {{VOLTAR}}
+  <h1 class="mt-1">{{FICHA}}</h1>
+</div>
+
+{{ALERTA}}
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr><th>#</th><th>Exercício</th><th>Tipo</th><th></th></tr>
+  </thead>
+  <tbody>
+    {{LINHAS}}
+  </tbody>
+</table>
+
+<h2 class="h5 mt-4">Incluir exercício</h2>
+<form method="post" action="/fichas/exercicios/incluir" class="d-flex gap-2" style="max-width: 500px">
+  <input type="hidden" name="id_treino" value="{{ID_TREINO}}">
+  <select class="form-select" name="id_exercicio" required>
+    <option value="">Selecione...</option>
+    {{OPCOES_EXERCICIO}}
+  </select>
+  <button class="btn btn-primary">Incluir</button>
+</form>
+<div class="form-text">O exercício entra no fim da ficha. Use as setas para mudar a ordem.</div>

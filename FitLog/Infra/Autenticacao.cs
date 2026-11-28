@@ -53,9 +53,54 @@ public static class Autenticacao
         var usuario = ExigirLogin(ctx);
         if (usuario != null && usuario.Perfil != "ADMIN")
         {
-            Http.Html(ctx, Template.Pagina(ctx, "acesso_negado.html", new(), "Acesso negado"), 403);
+            NegarAcesso(ctx);
             return null;
         }
         return usuario;
+    }
+
+    public static void NegarAcesso(HttpListenerContext ctx)
+    {
+        Http.Html(ctx, Template.Pagina(ctx, "acesso_negado.html", new(), "Acesso negado"), 403);
+    }
+
+    // Plano predefinido: só o admin altera. Plano personalizado: só quem está associado a ele.
+    public static bool PodeAlterarPlano(UsuarioLogado usuario, int idPlano)
+    {
+        var resultado = Database.Consultar("""
+            SELECT COUNT(*) AS qtd
+            FROM plano p
+            WHERE p.id_plano = :id_plano
+              AND (   (p.tipo = 'PREDEFINIDO' AND :admin = 1)
+                   OR (p.tipo = 'PERSONALIZADO' AND EXISTS (
+                          SELECT 1 FROM usuario_plano up
+                          WHERE up.id_plano = p.id_plano AND up.id_usuario = :id_usuario)))
+            """,
+            ("id_plano", idPlano),
+            ("admin", usuario.Perfil == "ADMIN" ? 1 : 0),
+            ("id_usuario", usuario.Id));
+
+        return Convert.ToInt32(resultado[0]["QTD"]) > 0;
+    }
+
+    // Ficha avulsa: só o dono. Ficha de plano: segue a regra do plano.
+    public static bool PodeAlterarFicha(UsuarioLogado usuario, int idTreino)
+    {
+        var resultado = Database.Consultar("""
+            SELECT COUNT(*) AS qtd
+            FROM treino t
+            LEFT JOIN plano p ON p.id_plano = t.id_plano
+            WHERE t.id_treino = :id_treino
+              AND (   (t.tipo_treino = 'AVULSO' AND t.id_usuario = :id_usuario)
+                   OR (p.tipo = 'PREDEFINIDO' AND :admin = 1)
+                   OR (p.tipo = 'PERSONALIZADO' AND EXISTS (
+                          SELECT 1 FROM usuario_plano up
+                          WHERE up.id_plano = p.id_plano AND up.id_usuario = :id_usuario)))
+            """,
+            ("id_treino", idTreino),
+            ("admin", usuario.Perfil == "ADMIN" ? 1 : 0),
+            ("id_usuario", usuario.Id));
+
+        return Convert.ToInt32(resultado[0]["QTD"]) > 0;
     }
 }

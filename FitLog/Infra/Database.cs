@@ -63,6 +63,9 @@ public static class Database
     public static void Transacao(Action<OracleConnection> comandos)
     {
         using var conn = Abrir();
+
+        Executar(conn, "ALTER SESSION DISABLE PARALLEL DML");
+
         using var transacao = conn.BeginTransaction();
         try
         {

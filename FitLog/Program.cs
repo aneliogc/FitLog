@@ -42,6 +42,12 @@ while (true)
                 case "/exercicios/form":  ExercicioHandler.Formulario(ctx); break;
                 case "/exercicios/grupos": ExercicioHandler.Grupos(ctx); break;
 
+                // Planos predefinidos e fichas
+                case "/planos":              PlanoHandler.Listar(ctx); break;
+                case "/planos/form":         PlanoHandler.Formulario(ctx); break;
+                case "/planos/fichas":       TreinoHandler.FichasDoPlano(ctx); break;
+                case "/fichas/exercicios":   TreinoExercicioHandler.Listar(ctx); break;
+
                 default: NaoEncontrada(ctx); break;
             }
         }
@@ -64,6 +70,16 @@ while (true)
                 case "/exercicios/grupos/incluir":    ExercicioHandler.IncluirGrupo(ctx); break;
                 case "/exercicios/grupos/principal":  ExercicioHandler.TornarPrincipal(ctx); break;
                 case "/exercicios/grupos/remover":    ExercicioHandler.RemoverGrupo(ctx); break;
+
+                // Planos predefinidos e fichas
+                case "/planos/salvar":               PlanoHandler.Salvar(ctx); break;
+                case "/planos/excluir":              PlanoHandler.Excluir(ctx); break;
+                case "/planos/fichas/salvar":        TreinoHandler.SalvarFicha(ctx); break;
+                case "/planos/fichas/excluir":       TreinoHandler.ExcluirFicha(ctx); break;
+                case "/planos/fichas/mover":         TreinoHandler.MoverFicha(ctx); break;
+                case "/fichas/exercicios/incluir":   TreinoExercicioHandler.Incluir(ctx); break;
+                case "/fichas/exercicios/remover":   TreinoExercicioHandler.Remover(ctx); break;
+                case "/fichas/exercicios/mover":     TreinoExercicioHandler.Mover(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

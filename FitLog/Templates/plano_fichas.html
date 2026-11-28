@@ -1,0 +1,25 @@
+<div class="mb-3">
+  {{VOLTAR}}
+  <h1 class="mt-1">Fichas de {{PLANO}}</h1>
+</div>
+
+{{ALERTA}}
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr><th>#</th><th>Ficha</th><th>Exercícios</th><th></th></tr>
+  </thead>
+  <tbody>
+    {{LINHAS}}
+  </tbody>
+</table>
+
+<h2 class="h5 mt-4">{{TITULO_FORM}}</h2>
+<form method="post" action="/planos/fichas/salvar" class="d-flex gap-2" style="max-width: 500px">
+  <input type="hidden" name="id_plano" value="{{ID_PLANO}}">
+  <input type="hidden" name="id_treino" value="{{ID_TREINO}}">
+  <input class="form-control" name="nome" value="{{NOME}}" placeholder="Ex.: Treino A – Peito e tríceps" required maxlength="100">
+  <button class="btn btn-primary">Salvar</button>
+  {{CANCELAR}}
+</form>
+<div class="form-text">A nova ficha entra no fim do plano. Use as setas para mudar a ordem.</div>

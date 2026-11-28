@@ -20,14 +20,7 @@ while (true)
         {
             switch (caminho)
             {
-                case "/":
-                    var usuario = Autenticacao.ExigirLogin(ctx);
-                    if (usuario == null) break;
-                    Http.Html(ctx, Template.Pagina(ctx, "inicio.html", new()
-                    {
-                        ["NOME"] = WebUtility.HtmlEncode(usuario.Nome)
-                    }, "Início"));
-                    break;
+                case "/":                    InicioHandler.Exibir(ctx); break;
 
                 // Conta (públicas)
                 case "/login":        ContaHandler.FormularioLogin(ctx); break;

@@ -26,6 +26,12 @@ public static class Http
         return form;
     }
 
+    // Valor de um parâmetro da URL (ex.: /grupos/form?id=3), ou "" se não vier
+    public static string Query(HttpListenerContext ctx, string nome)
+    {
+        return ctx.Request.QueryString[nome] ?? "";
+    }
+
     public static void Redirect(HttpListenerContext ctx, string url)
     {
         ctx.Response.Redirect(url);

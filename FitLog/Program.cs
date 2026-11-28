@@ -50,7 +50,8 @@ while (true)
                 case "/cadastro":       ContaHandler.Cadastrar(ctx); break;
 
                 // Grupos musculares
-                case "/grupos/salvar":  GrupoHandler.Salvar(ctx); break;
+                case "/grupos/salvar":   GrupoHandler.Salvar(ctx); break;
+                case "/grupos/excluir":  GrupoHandler.Excluir(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

@@ -11,7 +11,7 @@ public static class Database
         OracleConfiguration.TnsAdmin = @"C:\Wallet_ECBDT";
         OracleConfiguration.WalletLocation = @"C:\Wallet_ECBDT";
 
-        // A senha fica fora do código para não ir para o GitHub
+        // A senha fica fora do código
         var senha = Environment.GetEnvironmentVariable("FITLOG_DB_SENHA")
             ?? throw new InvalidOperationException("Defina a variável de ambiente FITLOG_DB_SENHA com a senha do banco.");
 

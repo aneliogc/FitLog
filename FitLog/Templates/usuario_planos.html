@@ -1,0 +1,20 @@
+<div class="mb-3">
+  <a href="/usuarios" class="text-decoration-none">&larr; Usuários</a>
+  <div class="d-flex justify-content-between align-items-center mt-1">
+    <h1 class="mb-0">Planos de {{USUARIO}}</h1>
+    <a class="btn btn-primary" href="/usuarios/planos/form?usuario={{ID_USUARIO}}">Novo plano</a>
+  </div>
+</div>
+
+<p class="text-body-secondary">Planos personalizados do usuário.</p>
+
+{{ALERTA}}
+
+<table class="table table-striped align-middle">
+  <thead>
+    <tr><th>Plano</th><th>Treinos</th><th></th></tr>
+  </thead>
+  <tbody>
+    {{LINHAS}}
+  </tbody>
+</table>

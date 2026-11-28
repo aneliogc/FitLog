@@ -156,10 +156,23 @@ public static class TreinoHandler
 
     private static string PaginaFichas(HttpListenerContext ctx, int idPlano, string idTreino, string nome, string erro)
     {
-        var plano = Database.Consultar("SELECT nome, tipo FROM plano WHERE id_plano = :id", ("id", idPlano))[0];
-        var voltar = plano["TIPO"]!.ToString() == "PREDEFINIDO"
-            ? """<a href="/planos" class="text-decoration-none">&larr; Planos predefinidos</a>"""
-            : """<a href="/meus-planos" class="text-decoration-none">&larr; Meus planos</a>""";
+        // dono: o usuário do plano personalizado (nulo no predefinido)
+        var plano = Database.Consultar("""
+            SELECT p.nome, p.tipo,
+                   (SELECT MIN(up.id_usuario) FROM usuario_plano up WHERE up.id_plano = p.id_plano) AS dono
+            FROM plano p
+            WHERE p.id_plano = :id
+            """, ("id", idPlano))[0];
+
+        // O link de volta depende de quem está vendo: o dono volta para Meus planos;
+        // o admin volta para os planos predefinidos ou para os planos do usuário dono
+        string voltar;
+        if (plano["TIPO"]!.ToString() == "PREDEFINIDO")
+            voltar = """<a href="/planos" class="text-decoration-none">&larr; Planos predefinidos</a>""";
+        else if (Convert.ToInt32(plano["DONO"]) == Autenticacao.Atual(ctx)!.Id)
+            voltar = """<a href="/meus-planos" class="text-decoration-none">&larr; Meus planos</a>""";
+        else
+            voltar = $"""<a href="/usuarios/planos?id={plano["DONO"]}" class="text-decoration-none">&larr; Planos do usuário</a>""";
 
         var fichas = Database.Consultar("""
             SELECT t.id_treino, t.nome,

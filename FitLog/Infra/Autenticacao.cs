@@ -88,14 +88,15 @@ public static class Autenticacao
         Http.Html(ctx, Template.Pagina(ctx, "acesso_negado.html", new(), "Acesso negado"), 403);
     }
 
-    // Plano predefinido: só o admin altera. Plano personalizado: só quem está associado a ele.
+    // Admin altera qualquer plano (predefinido, ou personalizado que ele montou para um usuário).
+    // Usuário comum só altera o plano personalizado que está associado a ele.
     public static bool PodeAlterarPlano(UsuarioLogado usuario, int idPlano)
     {
         var resultado = Database.Consultar("""
             SELECT COUNT(*) AS qtd
             FROM plano p
             WHERE p.id_plano = :id_plano
-              AND (   (p.tipo = 'PREDEFINIDO' AND :admin = 1)
+              AND (   :admin = 1
                    OR (p.tipo = 'PERSONALIZADO' AND EXISTS (
                           SELECT 1 FROM usuario_plano up
                           WHERE up.id_plano = p.id_plano AND up.id_usuario = :id_usuario)))
@@ -107,7 +108,7 @@ public static class Autenticacao
         return Convert.ToInt32(resultado[0]["QTD"]) > 0;
     }
 
-    // Ficha avulsa: só o dono. Ficha de plano: segue a regra do plano.
+    // Treino avulso: só o dono. Treino de plano: segue a regra do plano.
     public static bool PodeAlterarFicha(UsuarioLogado usuario, int idTreino)
     {
         var resultado = Database.Consultar("""
@@ -116,7 +117,7 @@ public static class Autenticacao
             LEFT JOIN plano p ON p.id_plano = t.id_plano
             WHERE t.id_treino = :id_treino
               AND (   (t.tipo_treino = 'AVULSO' AND t.id_usuario = :id_usuario)
-                   OR (p.tipo = 'PREDEFINIDO' AND :admin = 1)
+                   OR (t.tipo_treino = 'PLANO' AND :admin = 1)
                    OR (p.tipo = 'PERSONALIZADO' AND EXISTS (
                           SELECT 1 FROM usuario_plano up
                           WHERE up.id_plano = p.id_plano AND up.id_usuario = :id_usuario)))

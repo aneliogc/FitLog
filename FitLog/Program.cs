@@ -43,6 +43,8 @@ while (true)
 
                 // Usuários
                 case "/usuarios":            UsuarioHandler.Listar(ctx); break;
+                case "/usuarios/planos":     UsuarioPlanoHandler.Listar(ctx); break;
+                case "/usuarios/planos/form": UsuarioPlanoHandler.Formulario(ctx); break;
 
                 // Minha conta
                 case "/minha-conta":         MinhaContaHandler.Exibir(ctx); break;
@@ -94,6 +96,8 @@ while (true)
                 // Usuários
                 case "/usuarios/perfil":             UsuarioHandler.AlterarPerfil(ctx); break;
                 case "/usuarios/excluir":            UsuarioHandler.Excluir(ctx); break;
+                case "/usuarios/planos/salvar":      UsuarioPlanoHandler.Salvar(ctx); break;
+                case "/usuarios/planos/excluir":     UsuarioPlanoHandler.Excluir(ctx); break;
 
                 // Minha conta
                 case "/minha-conta/salvar":          MinhaContaHandler.SalvarDados(ctx); break;

@@ -126,6 +126,7 @@ public static class UsuarioHandler
                 var textoBotao = ehAdmin ? "Remover permissão" : "Elevar permissão";
                 linhas.Append($"""
                     <td class="text-end text-nowrap">
+                      <a class="btn btn-sm btn-outline-secondary" href="/usuarios/planos?id={id}">Planos</a>
                       <form method="post" action="/usuarios/perfil" class="d-inline">
                         <input type="hidden" name="id" value="{id}">
                         <input type="hidden" name="perfil" value="{novoPerfil}">

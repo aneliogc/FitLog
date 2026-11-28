@@ -51,6 +51,10 @@ while (true)
                 // Usuários
                 case "/usuarios":            UsuarioHandler.Listar(ctx); break;
 
+                // Minha conta
+                case "/minha-conta":         MinhaContaHandler.Exibir(ctx); break;
+                case "/minha-conta/senha":   MinhaContaHandler.FormularioSenha(ctx); break;
+
                 default: NaoEncontrada(ctx); break;
             }
         }
@@ -87,6 +91,11 @@ while (true)
                 // Usuários
                 case "/usuarios/perfil":             UsuarioHandler.AlterarPerfil(ctx); break;
                 case "/usuarios/excluir":            UsuarioHandler.Excluir(ctx); break;
+
+                // Minha conta
+                case "/minha-conta/salvar":          MinhaContaHandler.SalvarDados(ctx); break;
+                case "/minha-conta/senha":           MinhaContaHandler.AlterarSenha(ctx); break;
+                case "/minha-conta/excluir":         MinhaContaHandler.Excluir(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

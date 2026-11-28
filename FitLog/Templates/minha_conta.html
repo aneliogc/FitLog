@@ -1,0 +1,37 @@
+<h1 class="mb-3">Minha conta</h1>
+
+{{SUCESSO}}
+
+<div style="max-width: 500px">
+  <h2 class="h5">Dados pessoais</h2>
+  {{ALERTA_DADOS}}
+  <form method="post" action="/minha-conta/salvar">
+    <div class="mb-3">
+      <label class="form-label" for="login">Login</label>
+      <input class="form-control" id="login" value="{{LOGIN}}" disabled>
+      <div class="form-text">O login não pode ser alterado.</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="nome">Nome</label>
+      <input class="form-control" id="nome" name="nome" value="{{NOME}}" required maxlength="100">
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="email">E-mail</label>
+      <input class="form-control" id="email" name="email" type="email" value="{{EMAIL}}" required maxlength="150">
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="data_nasc">Data de nascimento</label>
+      <input class="form-control" id="data_nasc" name="data_nasc" type="date" value="{{DATA_NASC}}" required>
+    </div>
+    <button class="btn btn-primary">Salvar dados</button>
+    <a class="btn btn-outline-secondary" href="/minha-conta/senha">Alterar senha</a>
+  </form>
+</div>
+
+<hr class="my-4">
+
+<h2 class="h5 text-danger">Excluir conta</h2>
+<p class="text-body-secondary">Apaga a conta, os planos personalizados, as fichas avulsas e todos os treinos registrados. Não há como desfazer.</p>
+<form method="post" action="/minha-conta/excluir" onsubmit="return confirm('Excluir a sua conta e todos os seus dados? Não há como desfazer.')">
+  <button class="btn btn-outline-danger">Excluir minha conta</button>
+</form>

@@ -22,6 +22,12 @@ public static class Template
         return $"<div class=\"alert alert-danger\">{WebUtility.HtmlEncode(mensagem)}</div>";
     }
 
+    public static string Sucesso(string mensagem)
+    {
+        if (mensagem == "") return "";
+        return $"<div class=\"alert alert-success\">{WebUtility.HtmlEncode(mensagem)}</div>";
+    }
+
     private static string Menu(UsuarioLogado? usuario)
     {
         if (usuario == null) return "";

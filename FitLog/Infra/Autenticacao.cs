@@ -48,6 +48,14 @@ public static class Autenticacao
                 Sessoes[token] = Sessoes[token] with { Perfil = perfil };
     }
 
+    // Quando a pessoa muda o próprio nome, o menu passa a mostrar o nome novo
+    public static void AtualizarNome(int idUsuario, string nome)
+    {
+        foreach (var token in Sessoes.Keys.ToList())
+            if (Sessoes[token].Id == idUsuario)
+                Sessoes[token] = Sessoes[token] with { Nome = nome };
+    }
+
     // Usado ao excluir uma conta: quem estava logado com ela é deslogado
     public static void EncerrarSessoes(int idUsuario)
     {

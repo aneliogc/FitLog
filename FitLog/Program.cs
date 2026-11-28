@@ -48,6 +48,9 @@ while (true)
                 case "/planos/fichas":       TreinoHandler.FichasDoPlano(ctx); break;
                 case "/fichas/exercicios":   TreinoExercicioHandler.Listar(ctx); break;
 
+                // Usuários
+                case "/usuarios":            UsuarioHandler.Listar(ctx); break;
+
                 default: NaoEncontrada(ctx); break;
             }
         }
@@ -80,6 +83,10 @@ while (true)
                 case "/fichas/exercicios/incluir":   TreinoExercicioHandler.Incluir(ctx); break;
                 case "/fichas/exercicios/remover":   TreinoExercicioHandler.Remover(ctx); break;
                 case "/fichas/exercicios/mover":     TreinoExercicioHandler.Mover(ctx); break;
+
+                // Usuários
+                case "/usuarios/perfil":             UsuarioHandler.AlterarPerfil(ctx); break;
+                case "/usuarios/excluir":            UsuarioHandler.Excluir(ctx); break;
 
                 default: NaoEncontrada(ctx); break;
             }

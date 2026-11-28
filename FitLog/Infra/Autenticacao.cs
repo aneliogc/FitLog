@@ -40,6 +40,22 @@ public static class Autenticacao
         });
     }
 
+    // Quando um admin muda o perfil de alguém, as sessões abertas dessa pessoa passam a valer com o perfil novo
+    public static void AtualizarPerfil(int idUsuario, string perfil)
+    {
+        foreach (var token in Sessoes.Keys.ToList())
+            if (Sessoes[token].Id == idUsuario)
+                Sessoes[token] = Sessoes[token] with { Perfil = perfil };
+    }
+
+    // Usado ao excluir uma conta: quem estava logado com ela é deslogado
+    public static void EncerrarSessoes(int idUsuario)
+    {
+        foreach (var token in Sessoes.Keys.ToList())
+            if (Sessoes[token].Id == idUsuario)
+                Sessoes.Remove(token);
+    }
+
     public static UsuarioLogado? ExigirLogin(HttpListenerContext ctx)
     {
         var usuario = Atual(ctx);
